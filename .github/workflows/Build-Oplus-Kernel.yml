@@ -274,7 +274,21 @@ jobs:
           cd "$COMMON"
           git status
           cat "$DEFCONFIG"
-
+          
+      - name: Fix Bazel restore headers error
+        run: |
+          cd kernel_workspace/kernel_platform
+          BUILD_UTILS_FILE="build/build_utils.py"
+          if [ -f "$BUILD_UTILS_FILE" ]; then
+            echo "Patching build_utils.py to fix restore headers error..."
+            # 使用 sed 命令删除包含 'net/unix/scm.c' 和 'net/unix/scm.h' 的行
+            sed -i "/'net\/unix\/scm.c',/d" "$BUILD_UTILS_FILE"
+            sed -i "/'net\/unix\/scm.h',/d" "$BUILD_UTILS_FILE"
+            echo "Patching complete."
+          else
+            echo "Warning: build_utils.py not found, skipping patch. This might not be a Bazel build."
+          fi
+    
       - name: Build kernel # 构建内核
         run: |
           cd "$WORKSPACE"
