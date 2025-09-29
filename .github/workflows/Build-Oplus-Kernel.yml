@@ -13,10 +13,12 @@ on:
         required: true
         type: choice
         options:
-          - oneplus_13_v
-          - oneplus_13t_v
-          - oneplus_ace5_pro_v
-        default: oneplus_13_v
+          - oneplus_13t
+          - clo_oneplus_13t
+          - test
+          - clo-beta1
+          - beta1
+        default: beta1
 
       Chipset:
         description: "开发板代号 // Chipset codename"
@@ -31,7 +33,7 @@ on:
       KERNEL_NAME:
         description: "内核名称后缀 // Kernel name suffix"
         required: true
-        default: '-android15-8-g013ec21bba94-abogki383916444'
+        default: '-android15-8-s'
 
       KSU_CONFIG:
         description: "选择 KernelSU 配置 // Select KernelSU configuration"
@@ -150,7 +152,7 @@ jobs:
       - name: Initialize repo and sync # 初始化 repo 和同步
         run: |
           mkdir "$WORKSPACE" && cd "$WORKSPACE"
-          repo init -u https://github.com/schqiushui/kernel_manifest.git -b refs/heads/oneplus/${{ inputs.SoC }} -m ${{ inputs.FILE }}.xml --depth=1 || { echo "repo init 失败"; exit 1; }
+          repo init -u https://github.com/epicmann24/kernel_manifest.git -b refs/heads/oneplus/${{ inputs.SoC }} -m ${{ inputs.FILE }}.xml --depth=1 || { echo "repo init 失败"; exit 1; }
           repo sync -c -j$(nproc --all) --no-tags || { echo "repo sync 失败"; exit 1; }
           git clone https://gitlab.com/kei-space/clang/r522817.git $PLATFORM/prebuilts/clang/host/linux-x86/clang-r522817
 
